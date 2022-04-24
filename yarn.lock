@@ -6210,27 +6210,10 @@ near-api-js@0.44.2, near-api-js@^0.44.2:
     text-encoding-utf-8 "^1.0.2"
     tweetnacl "^1.0.1"
 
-near-api-js@^0.43.1:
-  version "0.43.1"
-  resolved "https://registry.yarnpkg.com/near-api-js/-/near-api-js-0.43.1.tgz#aa3f1669afae9eb37f65b02dca3f28472ebe4bb7"
-  integrity sha512-bgFuboD/a3eintaWqWMN9oWcGHkxbrKiJhxkJwHmwJrYx49y9QvWwEtoxeHSjKskJHUVXGKvaYRsc9XirrJ5JQ==
-  dependencies:
-    bn.js "5.2.0"
-    borsh "^0.6.0"
-    bs58 "^4.0.0"
-    depd "^2.0.0"
-    error-polyfill "^0.1.3"
-    http-errors "^1.7.2"
-    js-sha256 "^0.9.0"
-    mustache "^4.0.0"
-    node-fetch "^2.6.1"
-    text-encoding-utf-8 "^1.0.2"
-    tweetnacl "^1.0.1"
-
-near-cli@^3.0.0:
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/near-cli/-/near-cli-3.0.0.tgz#7444012e6a7ca7c24f0c8968707027d63de6eef6"
-  integrity sha512-kniImbOtKmHTgokMecvcIB0WljMpfoUxnMFVQlwHgeeQtU/JiZYq8N03DqoEiXRMWB7aeID3Fsdf5Go3RXxmzQ==
+near-cli@^3.2.0:
+  version "3.2.0"
+  resolved "https://registry.yarnpkg.com/near-cli/-/near-cli-3.2.0.tgz#a46ad7105ee6d6be12c86dafe2ecc039f4e76fe0"
+  integrity sha512-5bnSY2xzH3v0bEBX0+rNadLdjrScLZfcUnqmaJqhXofaJH67pL/qo+x7MS8MG8yPaJ8y702E5PPvrp/maAhsDw==
   dependencies:
     ascii-table "0.0.9"
     bn.js "^5.1.1"
@@ -6241,7 +6224,7 @@ near-cli@^3.0.0:
     jest-environment-node "^27.0.6"
     mixpanel "^0.13.0"
     ncp "^2.0.0"
-    near-api-js "^0.43.1"
+    near-api-js "^0.44.2"
     near-seed-phrase "^0.2.0"
     open "^8.0.7"
     rimraf "^3.0.0"
