@@ -47,6 +47,11 @@ fieldset {
   padding: 0;
 }
 
+.message-info {
+  display: flex;
+  justify-content: space-between;
+}
+
 .highlight {
   align-items: center;
   display: flex;

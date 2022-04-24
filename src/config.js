@@ -1,4 +1,4 @@
-const CONTRACT_NAME = process.env.CONTRACT_NAME || 'guest-book.testnet';
+const CONTRACT_NAME = process.env.CONTRACT_NAME || 'dev-1650802787325-84141039289394';
 
 function getConfig(env) {
   switch(env) {
