@@ -4,63 +4,50 @@ import App from './App';
 import getConfig from './config.js';
 import * as nearAPI from 'near-api-js';
 
-// Initializing contract
+import NearWalletSelector from "@near-wallet-selector/core";
+import { setupNearWallet } from "@near-wallet-selector/near-wallet";
+import { setupSender } from "@near-wallet-selector/sender";
+
+import nearWalletIconUrl from "@near-wallet-selector/near-wallet/assets/near-wallet-icon.png";
+import senderWalletIconUrl from "@near-wallet-selector/sender/assets/sender-icon.png";
+
 async function initContract() {
-  // get network configuration values from config.js
-  // based on the network ID we pass to getConfig()
-  const nearConfig = getConfig(process.env.NEAR_ENV || 'testnet');
+  const nearConfig = getConfig('testnet')
+  const selector = await NearWalletSelector.init({
+    network: nearConfig.networkId,
+    contractId: nearConfig.contractName,
+    wallets: [
+      setupNearWallet({'iconUrl': nearWalletIconUrl}),
+      setupSender({'iconUrl': senderWalletIconUrl}),
+    ],
+  });
+  selector.on("signIn", () => window.location.replace(window.location.origin + window.location.pathname));
+  selector.on("signOut", () => window.location.replace(window.location.origin + window.location.pathname));
+  window.selector = selector;
 
-  // create a keyStore for signing transactions using the user's key
-  // which is located in the browser local storage after user logs in
-  const keyStore = new nearAPI.keyStores.BrowserLocalStorageKeyStore();
-
-  // Initializing connection to the NEAR testnet
-  const near = await nearAPI.connect({ keyStore, ...nearConfig });
-
-  // Initialize wallet connection
-  const walletConnection = new nearAPI.WalletConnection(near);
-
-  // Load in user's account data
   let currentUser;
-  if (walletConnection.getAccountId()) {
+  if (selector.isSignedIn()) {
+    const account = (await selector.getAccounts())[0];
+
+    const provider = new nearAPI.providers.JsonRpcProvider({
+      url: selector.network.nodeUrl,
+    });
+
     currentUser = {
-      // Gets the accountId as a string
-      accountId: walletConnection.getAccountId(),
-      // Gets the user's token balance
-      balance: (await walletConnection.account().state()).amount,
+      accountId: account.accountId,
+      balance: (await provider.query(`account/${account.accountId}`, "")).amount
     };
   }
 
-  // Initializing our contract APIs by contract name and configuration
-  const contract = await new nearAPI.Contract(
-    // User's accountId as a string
-    walletConnection.account(),
-    // accountId of the contract we will be loading
-    // NOTE: All contracts on NEAR are deployed to an account and
-    // accounts can only have one contract deployed to them.
-    nearConfig.contractName,
-    {
-      // View methods are read-only – they don't modify the state, but usually return some value
-      viewMethods: ['getMessages'],
-      // Change methods can modify the state, but you don't receive the returned value when called
-      changeMethods: ['addMessage'],
-      // Sender is the account ID to initialize transactions.
-      // getAccountId() will return empty string if user is still unauthorized
-      sender: walletConnection.getAccountId(),
-    }
-  );
-
-  return { contract, currentUser, nearConfig, walletConnection };
+  return { selector, currentUser };
 }
 
 window.nearInitPromise = initContract().then(
-  ({ contract, currentUser, nearConfig, walletConnection }) => {
+  ({ selector, currentUser }) => {
     ReactDOM.render(
       <App
-        contract={contract}
+        selector={selector}
         currentUser={currentUser}
-        nearConfig={nearConfig}
-        wallet={walletConnection}
       />,
       document.getElementById('root')
     );
